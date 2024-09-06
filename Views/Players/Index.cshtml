@@ -1,0 +1,106 @@
+﻿@* Define Model *@
+@model IEnumerable<Player>
+
+@* Define ViewData *@
+@{
+    ViewData["Title"] = "Lista jucătorilor - Vladi Revolution";
+}
+
+@* Write Code *@
+<div class="d-flex justify-content-center text-center">
+    <div class="row">
+        &nbsp; <h1 class="text-center">Lista jucătorilor</h1> &nbsp;
+        <div class="d-flex justify-content-center">
+            <form class="form-inline my-2 my-lg-0 d-flex" asp-controller="Players" asp-action="Filter">
+                <input name="searchString" type="text" class="form-control" placeholder="Caută jucător..."
+                       style="width: 300px; padding: 5px;" />
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="margin-left: 5px;">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+            <div style="position: fixed; right: 25px; bottom: 25px;" class="text-white">
+                <a asp-controller="Players" asp-action="Create" class="btn btn-success btn-lg" style="margin-bottom: 50px;">
+                    <i class="bi bi-plus-circle"></i> Add New
+                </a>
+            </div>
+        </div>
+        &nbsp;
+        <table class="table table-responsive">
+            <thead>
+                <tr class="align-middle">
+                    <th>@Html.DisplayNameFor(Model => Model.ProfilePictureUrl)</th>
+                    <th>@Html.DisplayNameFor(Model => Model.FullName)</th>
+                    <th class="d-none d-md-table-cell">@Html.DisplayNameFor(Model => Model.BirthDate)</th>
+                    <th class="d-none d-md-table-cell">@Html.DisplayNameFor(Model => Model.Position)</th>
+                    <th class="d-none d-md-table-cell">Acțiuni</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                        <tr class="align-middle">
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id" style="text-decoration: none;">
+                                    <img class="rounded-circle" src="@item.ProfilePictureUrl" alt="@item.FullName" style="max-width: 150px" />
+                                </a>
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id" style="text-decoration: none;">
+                                @Html.DisplayFor(Model => item.FullName)
+                                </a>
+                            </td>
+                            <td class="d-none d-md-table-cell">@Html.DisplayFor(Model => item.BirthDate)</td>
+                            <td class="d-none d-md-table-cell">@Html.DisplayFor(Model => item.Position)</td>
+                            <td class="d-none d-md-table-cell">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> Editează</a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary"><i class="bi bi-eye"></i> Detalii</a>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-player-id="@item.Id" data-player-name="@item.FullName">
+                                    <i class="bi bi-trash"></i> Șterge
+                                </button>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@* Bootstrap Modal for Delete Confirmation *@
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Șterge jucător</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Ești sigur că vrei să ștergi jucătorul <strong id="playerName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anulează</button>
+                <form id="deleteForm" method="post">
+                    <button type="submit" class="btn btn-danger">Șterge</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <script>
+            // JavaScript to handle passing player details to the modal
+            var deleteModal = document.getElementById('deleteModal');
+            deleteModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var playerId = button.getAttribute('data-player-id');
+                var playerName = button.getAttribute('data-player-name');
+
+                var modalTitle = deleteModal.querySelector('.modal-title');
+                var playerNameElement = deleteModal.querySelector('#playerName');
+                var deleteForm = deleteModal.querySelector('#deleteForm');
+
+                playerNameElement.textContent = playerName;
+                deleteForm.action = '/Players/Delete/' + playerId;
+            });
+        </script>
+}

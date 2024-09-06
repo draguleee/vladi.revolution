@@ -1,0 +1,82 @@
+﻿@*Define Model*@
+@model Player
+
+@*Define ViewData*@
+@{
+    ViewData["Title"] = "Detalii Jucător - Vladi Revolution";
+}
+
+@*Write Code*@
+<div class="d-flex justify-content-center text-center">
+    <div class="container">
+        &nbsp; <h1 class="text-center">Detaliile jucătorului</h1> &nbsp;
+        <div class="row">
+            <div class="col-lg-4 col-md-5 xs-margin-30px-bottom">
+                <img class="rounded-circle" src="@Model.ProfilePictureUrl" alt="@Model.FullName" style="max-width: 250px" />
+                &nbsp;
+                <div class="bg-light-gray padding-30px-all md-padding-25px-all sm-padding-20px-all text-center">
+                    &nbsp;
+                    <h4 class="margin-10px-bottom font-size24 md-font-size22 sm-font-size20 font-weight-600">@Model.FullName</h4>
+                    <div class="margin-20px-top team-single-icons">
+                    <ul style="list-style-type: none;">
+                        <li><a href="javascript:void(0)"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                        <li><a href="javascript:void(0)"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-7">
+            <div class="padding-50px-left sm-no-padding-left">
+                <div class="contact-info-section margin-40px-tb">
+                    <ul style="list-style-type: none;">
+                        <li>
+                            <div class="row">
+                                <div class="col-md-5 col-5">
+                                    <strong class="margin-10px-left">Nume: </strong>
+                                </div>
+                                <div class="col-md-7 col-7">
+                                    <p>@Model.FullName</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row">
+                                <div class="col-md-5 col-5">
+                                    <strong class="margin-10px-left">Data nașterii:</strong>
+                                </div>
+                                <div class="col-md-7 col-7">
+                                    <p>@Model.BirthDate</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row">
+                                <div class="col-md-5 col-5">
+                                    <strong class="margin-10px-left">Poziția:</strong>
+                                </div>
+                                <div class="col-md-7 col-7">
+                                    <p>@Model.Position</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row">
+                                <div class="col-md-5 col-5">
+                                    <strong class="margin-10px-left">Biografie:</strong>
+                                </div>
+                                <div class="col-md-7 col-7">
+                                    <p>@Model.Biography</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+                </div>
+            </div>
+    </div>
+</div>
+
+
