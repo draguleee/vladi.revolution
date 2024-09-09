@@ -14,36 +14,36 @@
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group text-center">
-                    <img id="ProfilePicturePreview" />
+                    <img id="ProfilePicturePreview" style="display:none;" />
                 </div>
                 &nbsp;
                 <div class="form-group">
                     <label asp-for="ProfilePictureUrl" class="control-label"></label>
-                    <input asp-for="ProfilePictureUrl" class="form-control w-100" style="padding: 10px; font-size: 1.1em;" />
+                    <input asp-for="ProfilePictureUrl" class="form-control w-100" />
                     <span asp-validation-for="ProfilePictureUrl" class="text-danger"></span>
                 </div>
                 &nbsp;
                 <div class="form-group">
                     <label asp-for="FullName" class="control-label"></label>
-                    <input asp-for="FullName" class="form-control w-100" style="padding: 10px; font-size: 1.1em;" />
+                    <input asp-for="FullName" class="form-control w-100" />
                     <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
                 &nbsp;
                 <div class="form-group">
                     <label asp-for="BirthDate" class="control-label"></label>
-                    <input asp-for="BirthDate" type="date" class="form-control w-100" style="padding: 10px; font-size: 1.1em;" />
+                    <input asp-for="BirthDate" type="date" class="form-control w-100" />
                     <span asp-validation-for="BirthDate" class="text-danger"></span>
                 </div>
                 &nbsp;
                 <div class="form-group">
                     <label asp-for="Position" class="control-label"></label>
-                    <input asp-for="Position" class="form-control w-100" style="padding: 10px; font-size: 1.1em;" />
+                    <input asp-for="Position" class="form-control w-100" />
                     <span asp-validation-for="Position" class="text-danger"></span>
                 </div>
                 &nbsp;
                 <div class="form-group">
                     <label asp-for="Biography" class="control-label"></label>
-                    <textarea asp-for="Biography" class="form-control w-100" style="padding: 10px; font-size: 1.1em;"></textarea>
+                    <textarea asp-for="Biography" class="form-control w-100"></textarea>
                     <span asp-validation-for="Biography" class="text-danger"></span>
                 </div>
                 &nbsp;
@@ -60,11 +60,22 @@
     <script>
         $(document).ready(function () {
             var output = document.getElementById('ProfilePicturePreview');
-            output.src = $('#ProfilPictureUrl').val();
-        })
-        $("#ProfilePictureUrl").on("change", function () {
-            var output = document.getElementById('ProfilePicturePreview');
-            output.src = $(this).val();
-        })
+            var imageUrl = $('#ProfilePictureUrl').val();
+            if (imageUrl) {
+                output.src = imageUrl;
+                output.style.display = "block";
+            }
+        });
+
+                $("#ProfilePictureUrl").on("change", function () {
+                    var output = document.getElementById('ProfilePicturePreview');
+                    var newImageUrl = $(this).val();
+                    if (newImageUrl) {
+                        output.src = newImageUrl;
+                        output.style.display = "block";
+                    } else {
+                        output.style.display = "none";
+                    }
+                });
     </script>
 }
