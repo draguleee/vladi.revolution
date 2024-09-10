@@ -1,4 +1,31 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function toggleDarkMode() {
+    document.documentElement.classList.toggle('dark-mode');
+    const isDarkMode = document.documentElement.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+    updateModeIcon(isDarkMode);
+}
 
-// Write your JavaScript code.
+function updateModeIcon(isDarkMode) {
+    const modeIcon = document.getElementById('modeIcon');
+    if (isDarkMode) {
+        modeIcon.innerHTML = '<i class="fas fa-moon"></i>';
+    } else {
+        modeIcon.innerHTML = '<i class="bi bi-brightness-high"></i>';
+    }
+}
+
+window.onload = function () {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const darkMode = localStorage.getItem('darkMode');
+    const isDarkMode = (darkMode === 'enabled');
+
+    if (isDarkMode) {
+        document.documentElement.classList.add('dark-mode');
+        darkModeToggle.checked = true;
+    } else {
+        darkModeToggle.checked = false;
+    }
+
+    // Set the correct icon on page load
+    updateModeIcon(isDarkMode);
+};

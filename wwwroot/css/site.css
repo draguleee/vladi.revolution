@@ -1,8 +1,39 @@
+/* Default (light mode) colors */
+:root {
+    --text-color: #000000;
+    --background-color: #f5f5f5;
+    --navbar-background-color: #f8f9fa;
+    --footer-background-color: #f8f9fa;
+}
+
+
+/* Dark mode colors */
+.dark-mode {
+    --text-color: #ffffff;
+    --background-color: #121212;
+    --navbar-background-color: #1f1f1f;
+    --footer-background-color: #1f1f1f;
+}
+
+
 /* Global styles and settings for light and dark mode */
 html {
     font-size: 14px;
     position: relative;
-    min-height: 100%;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.5s ease, color 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -14,4 +45,137 @@ html {
 input {
     padding: 10px;
     font-size: 1.5em;
+}
+
+
+/* Navbar dark mode */
+.navbar {
+    background-color: var(--navbar-background-color) !important;
+    color: var(--text-color) !important;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+    .navbar a {
+        color: var(--text-color) !important;
+    }
+
+
+/* Footer styles */
+footer {
+    background-color: var(--footer-background-color);
+    color: var(--text-color);
+    transition: background-color 0.5s ease, color 0.5s ease;
+    margin-top: auto;
+    width: 100%;
+}
+
+    footer .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 15px;
+    }
+
+    footer a {
+        color: var(--text-color);
+    }
+
+
+/* Apply text color to common elements */
+h1, h2, h3, h4, h5, h6, p, a, span, div, td, th {
+    color: var(--text-color);
+}
+
+#modeIcon {
+    margin-right: 10px;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+
+/* Toggle switch styling */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    margin: 5px 0;
+}
+
+.switch-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cccccc;
+    transition: 0.4s;
+    border-radius: 20px;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+
+input:checked + .slider {
+    background-color: #808080;
+}
+
+    input:checked + .slider:before {
+        transform: translateX(20px);
+    }
+
+
+/* Dark mode styles for the modal */
+.dark-mode .modal-content {
+    background-color: #2c2c2c;
+    color: #ffffff;
+    border: none;
+}
+
+.dark-mode .modal-header {
+    border-bottom: 1px solid #444444;
+}
+
+.dark-mode .modal-footer {
+    border-top: 1px solid #444444;
+}
+
+.dark-mode .btn-close {
+    filter: invert(1);
+}
+
+.dark-mode .modal-body {
+    color: #dddddd;
+}
+
+.dark-mode .modal-footer .btn-secondary {
+    background-color: #444444;
+    border-color: #555555;
+}
+
+.dark-mode .modal-footer .btn-danger {
+    background-color: #ff4444;
+    border-color: #ff5555;
 }
