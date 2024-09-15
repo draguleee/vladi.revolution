@@ -5,6 +5,7 @@ using vladi.revolution.Data.Services.Interfaces;
 using vladi.revolution.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using Microsoft.SqlServer.Server;
 
 namespace vladi.revolution.Controllers
 {
@@ -61,21 +62,13 @@ namespace vladi.revolution.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber")] Player player, string[] Position)
+        [Route("players/create")]
+        public async Task<IActionResult> Create([Bind("ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber")] Player player, string[] Position, string format = "html")
         {
-            if (!ModelState.IsValid) return ViewWithPositions(player);
+            if (!ModelState.IsValid) return format == "json" ? BadRequest(ModelState) : ViewWithPositions(player);
             player.Position = ParsePositions(Position);
             await _service.AddAsync(player);
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [Route("players/createJson")]
-        public async Task<IActionResult> CreateJson([FromBody] Player player, string[] Position)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            await _service.AddAsync(player);
-            return Ok(player);
+            return format == "json" ? Ok(player) : RedirectToAction(nameof(Index));
         }
 
         #endregion
@@ -88,8 +81,7 @@ namespace vladi.revolution.Controllers
         public async Task<IActionResult> Details(int id, string format = "html")
         {
             var player = await _service.GetByIdAsync(id);
-            if (player == null)
-                return format == "json" ? NotFound(new { message = "Player not found" }) : View("NotFound");
+            if (player == null) return format == "json" ? NotFound(new { message = "Player not found" }) : View("NotFound");
             return format == "json" ? Json(player) : View(player);
         }
 
@@ -108,24 +100,16 @@ namespace vladi.revolution.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber")] Player player, string[] Position)
+        [Route("players/edit/{id}")]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber")] Player player, string[] Position, string format = "html")
         {
-            if (!ModelState.IsValid) return ViewWithPositions(player);
-            player.Position = ParsePositions(Position);
-            await _service.UpdateAsync(id, player);
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [Route("players/editSuccess/{id}")]
-        public async Task<IActionResult> EditJson(int id, [FromBody] Player player)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return format == "json" ? BadRequest(ModelState) : ViewWithPositions(player);
             var existingPlayer = await _service.GetByIdAsync(id);
-            if (existingPlayer == null) return NotFound();
+            if (existingPlayer == null) return format == "json" ? NotFound() : View("NotFound");
             UpdatePlayerDetails(existingPlayer, player);
+            existingPlayer.Position = ParsePositions(Position); 
             await _service.UpdateAsync(id, existingPlayer);
-            return Ok(existingPlayer);
+            return format == "json" ? Ok(existingPlayer) : RedirectToAction(nameof(Index));
         }
 
         #endregion
