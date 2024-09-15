@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using vladi.revolution.Data.Enums;
 using vladi.revolution.Data.Services.Interfaces;
 using vladi.revolution.Models;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
@@ -20,264 +17,194 @@ namespace vladi.revolution.Controllers
             _service = service;
         }
 
-        /** ---------------------------- GET ALL PLAYERS ---------------------------- **/
 
-        // Get all the players in the Index.cshtml view
+        #region GET ALL PLAYERS
+
         [HttpGet]
         [Route("players")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string format = "html")
         {
-            var data = await _service.GetAllAsync();
-            return View(data);
+            var players = await _service.GetAllAsync();
+            return format == "json" ? Json(players) : View(players);
         }
 
-        // Get all the players in JSON format
-        [HttpGet]
-        [Route("api/players")]
-        public async Task<IActionResult> IndexJson()
-        {
-            var data = await _service.GetAllAsync();
-            return Json(data);
-        }
+        #endregion
 
 
-        /** ---------------------------- FILTER PLAYERS BY NAME ---------------------------- **/
+        #region FILTER PLAYERS
 
-        // Filter the players by name and display them in the Index.cshtml view
         [HttpGet]
         [Route("players/filter")]
-        public async Task<IActionResult> Filter(string searchString)
+        public async Task<IActionResult> Filter(string searchString, string format = "html")
         {
             var allPlayers = await _service.GetAllAsync();
             if (!string.IsNullOrEmpty(searchString))
             {
                 searchString = NormalizeString(searchString);
-                var filteredResult = allPlayers.Where(n => NormalizeString(n.FullName).Contains(searchString, StringComparison.OrdinalIgnoreCase));
-                return View("Index", filteredResult);
+                var filteredPlayers = allPlayers.Where(p => NormalizeString(p.FullName).Contains(searchString, StringComparison.OrdinalIgnoreCase));
+                return format == "json" ? Ok(filteredPlayers) : View("Index", filteredPlayers);
             }
-            return View("Index", allPlayers);
+            return format == "json" ? Ok(allPlayers) : View("Index", allPlayers);
         }
 
-        // Filter the players by name and display them in JSON format
-        [HttpGet]
-        [Route("api/players/filter")]
-        public async Task<IActionResult> FilterJson(string searchString)
-        {
-            var allPlayers = await _service.GetAllAsync();
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                searchString = NormalizeString(searchString);
-                var filteredResult = allPlayers.Where(n => NormalizeString(n.FullName).Contains(searchString, StringComparison.OrdinalIgnoreCase));
-                return Ok(filteredResult);
-            }
-            return Ok(allPlayers);
-        }
-
-        // Helper function to replace Romanian diacritics with standard Latin characters
-        private string NormalizeString(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                return input;
-            }
-            return input
-                .Replace("ă", "a")
-                .Replace("â", "a")
-                .Replace("î", "i")
-                .Replace("ș", "s")
-                .Replace("ț", "t")
-                .Replace("Ă", "A")
-                .Replace("Â", "A")
-                .Replace("Î", "I")
-                .Replace("Ș", "S")
-                .Replace("Ț", "T");
-        }
+        #endregion
 
 
-        /** ---------------------------- CREATE A NEW PLAYER ---------------------------- **/
+        #region CREATE PLAYER
 
-        // Display the Create.cshtml form
         [HttpGet]
         [Route("players/create")]
-        public IActionResult Create()
+        public IActionResult Create(string format = "html")
         {
-            ViewBag.Positions = Enum.GetValues(typeof(Positions))
-                .Cast<Positions>()
-                .Select(p => new SelectListItem
-                {
-                    Text = $"{p.ToString()} - {(p.GetType().GetField(p.ToString())?.GetCustomAttribute<DisplayAttribute>()?.Name ?? p.ToString())}",
-                    Value = p.ToString()
-                }).ToList();
-
-            return View();
+            var positions = GetPositionsList();
+            return format == "json" ? Json(positions) : ViewWithPositions();
         }
 
-        // Display the Create.cshtml form (precisely, the Positions) in JSON format
-        [HttpGet]
-        [Route("api/players/create")]
-        public IActionResult CreateJson()
-        {
-            var positions = Enum.GetValues(typeof(Positions))
-                .Cast<Positions>()
-                .Select(p => new
-                {
-                    Text = $"{p.ToString()} - {(p.GetType().GetField(p.ToString())?.GetCustomAttribute<DisplayAttribute>()?.Name ?? p.ToString())}",
-                    Value = p.ToString()
-                })
-                .ToList();
-            return Json(positions);
-        }
-
-        // Create a new player 
         [HttpPost]
         public async Task<IActionResult> Create([Bind("ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber")] Player player, string[] Position)
         {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Positions = Enum.GetValues(typeof(Positions))
-                    .Cast<Positions>()
-                    .Select(p => new SelectListItem
-                    {
-                        Text = p.ToString(),
-                        Value = p.ToString()
-                    }).ToList();
-                return View(player);
-            }
-            player.Position = Position.Select(p => Enum.Parse<Positions>(p)).ToList();
+            if (!ModelState.IsValid) return ViewWithPositions(player);
+            player.Position = ParsePositions(Position);
             await _service.AddAsync(player);
             return RedirectToAction(nameof(Index));
         }
 
-        // Create a new player in JSON format
         [HttpPost]
-        [Route("api/players/create")]
+        [Route("players/createJson")]
         public async Task<IActionResult> CreateJson([FromBody] Player player, string[] Position)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState); 
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             await _service.AddAsync(player);
-            return Ok(player); 
+            return Ok(player);
         }
 
+        #endregion
 
-        /** ---------------------------- GET PLAYER'S DETAILS ---------------------------- **/
 
-        // Get player's details in Details.cshtml view
+        #region PLAYER DETAILS
+
         [HttpGet]
         [Route("players/details/{id}")]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, string format = "html")
         {
-            var playerDetails = await _service.GetByIdAsync(id);
-            if (playerDetails == null) return View("NotFound");
-            return View(playerDetails);
+            var player = await _service.GetByIdAsync(id);
+            if (player == null)
+                return format == "json" ? NotFound(new { message = "Player not found" }) : View("NotFound");
+            return format == "json" ? Json(player) : View(player);
         }
 
-        // Get player's details in JSON format
-        [HttpGet]
-        [Route("api/players/details/{id}")]
-        public async Task<IActionResult> DetailsJson(int id)
-        {
-            var playerDetails = await _service.GetByIdAsync(id);
-            if (playerDetails == null) return View("NotFound");
-            return Json(playerDetails);
-        }
+        #endregion
 
 
-        /** ---------------------------- EDIT PLAYER'S DETAILS ---------------------------- **/
+        #region EDIT PLAYER
 
-        // Edit player's details in Edit.cshtml view
         [HttpGet]
         [Route("players/edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            var playerDetails = await _service.GetByIdAsync(id);
-            if (playerDetails == null) return View("NotFound");
-            ViewBag.Positions = Enum.GetValues(typeof(Positions))
-                .Cast<Positions>()
-                .Select(p => new SelectListItem
-                {
-                    Text = p.ToString(),
-                    Value = p.ToString(),
-                    Selected = playerDetails.Position.Contains(p)
-                }).ToList();
-            return View(playerDetails);
+            var player = await _service.GetByIdAsync(id);
+            if (player == null) return View("NotFound");
+            return ViewWithPositions(player);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber")] Player player, string[] Position)
         {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Positions = Enum.GetValues(typeof(Positions))
-                    .Cast<Positions>()
-                    .Select(p => new SelectListItem
-                    {
-                        Text = p.ToString(),
-                        Value = p.ToString(),
-                        Selected = Position.Contains(p.ToString())
-                    }).ToList();
-                return View(player);
-            }
-            player.Position = Position.Select(p => Enum.Parse<Positions>(p)).ToList();
+            if (!ModelState.IsValid) return ViewWithPositions(player);
+            player.Position = ParsePositions(Position);
             await _service.UpdateAsync(id, player);
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
-        [Route("api/players/edit/{id}")]
+        [Route("players/editSuccess/{id}")]
         public async Task<IActionResult> EditJson(int id, [FromBody] Player player)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             var existingPlayer = await _service.GetByIdAsync(id);
-            if (existingPlayer == null)
-            {
-                return NotFound(); 
-            }
-            existingPlayer.ProfilePictureUrl = player.ProfilePictureUrl;
-            existingPlayer.FullName = player.FullName;
-            existingPlayer.BirthDate = player.BirthDate;
-            existingPlayer.Position = player.Position; 
-            existingPlayer.ShirtNumber = player.ShirtNumber;
-
+            if (existingPlayer == null) return NotFound();
+            UpdatePlayerDetails(existingPlayer, player);
             await _service.UpdateAsync(id, existingPlayer);
-            return Ok(existingPlayer); 
+            return Ok(existingPlayer);
         }
 
+        #endregion
 
 
-        /** ---------------------------- DELETE PLAYER ---------------------------- **/
+        #region DELETE PLAYER
 
         [HttpGet]
         [Route("players/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var playerDetails = await _service.GetByIdAsync(id);
-            if (playerDetails == null) return View("NotFound");
-            return View(playerDetails);
+            var player = await _service.GetByIdAsync(id);
+            if (player == null) return View("NotFound");
+            return View(player);
         }
 
         [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [Route("players/delete/{id}")]
+        public async Task<IActionResult> DeleteConfirmed(int id, string format = "html")
         {
-            var playerDetails = await _service.GetByIdAsync(id);
-            if (playerDetails == null) return View("NotFound");
+            var player = await _service.GetByIdAsync(id);
+            if (player == null) return format == "json" ? NotFound(new { message = "Player not found" }) : View("NotFound");
             await _service.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            return format == "json" ? Ok(new { message = "Player deleted successfully" }) : RedirectToAction(nameof(Index));
         }
 
-        [HttpDelete]
-        [Route("api/players/{id}")]
-        public async Task<IActionResult> DeleteConfirmedJson(int id)
+        #endregion
+
+
+        #region HELPER METHODS
+
+        // Method to fetch and format the Positions enum as SelectListItems
+        private List<SelectListItem> GetPositionsList()
         {
-            var playerDetails = await _service.GetByIdAsync(id);
-            if (playerDetails == null) return NotFound(new { message = "Player not found" });
-            await _service.DeleteAsync(id);
-            return Ok(new { message = "Player deleted successfully" });
+            return Enum.GetValues(typeof(Positions))
+                .Cast<Positions>()
+                .Select(p => new SelectListItem
+                {
+                    Text = $"{p} - {(p.GetType().GetField(p.ToString())?.GetCustomAttribute<DisplayAttribute>()?.Name ?? p.ToString())}",
+                    Value = p.ToString()
+                })
+                .ToList();
         }
+
+        // Method to parse Positions strings to enum
+        private List<Positions> ParsePositions(string[] positions)
+        {
+            return positions.Select(p => Enum.Parse<Positions>(p)).ToList();
+        }
+
+        // Method to render the view with Positions data pre-populated
+        private IActionResult ViewWithPositions(object model = null)
+        {
+            ViewBag.Positions = GetPositionsList();
+            return View(model);
+        }
+
+        // Method to update the existing player's details
+        private void UpdatePlayerDetails(Player existingPlayer, Player newPlayer)
+        {
+            existingPlayer.ProfilePictureUrl = newPlayer.ProfilePictureUrl;
+            existingPlayer.FullName = newPlayer.FullName;
+            existingPlayer.BirthDate = newPlayer.BirthDate;
+            existingPlayer.Position = newPlayer.Position;
+            existingPlayer.ShirtNumber = newPlayer.ShirtNumber;
+        }
+
+        // Method to normalize Romanian diacritics in a string
+        private string NormalizeString(string input)
+        {
+            if (string.IsNullOrEmpty(input)) return input;
+            return input
+                .Replace("ă", "a").Replace("â", "a").Replace("î", "i")
+                .Replace("ș", "s").Replace("ț", "t")
+                .Replace("Ă", "A").Replace("Â", "A").Replace("Î", "I")
+                .Replace("Ș", "S").Replace("Ț", "T");
+        }
+
+        #endregion
+
     }
 }
