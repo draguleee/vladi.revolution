@@ -232,10 +232,6 @@ namespace vladi.revolution.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Biography")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date");
 
@@ -251,6 +247,9 @@ namespace vladi.revolution.Migrations
                     b.Property<string>("ProfilePictureUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ShirtNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

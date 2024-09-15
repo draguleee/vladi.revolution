@@ -5,7 +5,7 @@
 namespace vladi.revolution.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdatedIdentity : Migration
+    public partial class UpdatePlayerTableV2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

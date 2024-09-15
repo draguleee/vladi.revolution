@@ -44,10 +44,10 @@
                             <li>
                                 <div class="row justify-content-center">
                                     <div class="col-md-5 col-5">
-                                        <strong class="margin-10px-left">Data nașterii:</strong>
+                                        <strong class="margin-10px-left">Data nașterii & vârsta:</strong>
                                     </div>
                                     <div class="col-md-7 col-7">
-                                        <p>@Model.BirthDate.ToString("dd MMM yyyy")</p>
+                                        <p>@Model.BirthDate.ToString("dd MMM yyyy") (@Model.Age)</p>
                                     </div>
                                 </div>
                             </li>
@@ -57,17 +57,17 @@
                                         <strong class="margin-10px-left">Poziția:</strong>
                                     </div>
                                     <div class="col-md-7 col-7">
-                                        <p>@Model.Position</p>
+                                        <p>@string.Join(", ", Model.Position.Select(p => p.ToString()))</p>
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div class="row justify-content-center">
                                     <div class="col-md-5 col-5">
-                                        <strong class="margin-10px-left">Biografie:</strong>
+                                        <strong class="margin-10px-left">Numărul de pe tricou:</strong>
                                     </div>
                                     <div class="col-md-7 col-7">
-                                        <p>@Model.Biography</p>
+                                        <p>@Model.ShirtNumber</p>
                                     </div>
                                 </div>
                             </li>

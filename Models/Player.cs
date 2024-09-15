@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using vladi.revolution.Data.Enums;
+using System.Collections.Generic;
+using System;
 
 namespace vladi.revolution.Models
 {
@@ -21,12 +23,24 @@ namespace vladi.revolution.Models
         [Required(ErrorMessage = "Data nașterii este obligatorie!")]
         public DateOnly BirthDate { get; set; }
 
+        [Display(Name = "Vârsta")]
+        public int Age
+        {
+            get
+            {
+                var today = DateOnly.FromDateTime(DateTime.Now);
+                int age = today.Year - BirthDate.Year;
+                if (today < BirthDate.AddYears(age)) age--;
+                return age;
+            }
+        }
+
         [Display(Name = "Poziție")]
         [Required(ErrorMessage = "Poziția jucătorului este obligatorie!")]
-        public string Position { get; set; }
+        public List<Positions> Position { get; set; } = new List<Positions>();
 
-        [Display(Name = "Biografie")]
-        [Required(ErrorMessage = "Biografia este obligatorie!")]
-        public required string Biography { get; set; }   
+        [Display(Name = "Număr tricou")]
+        [Required(ErrorMessage = "Numărul de pe tricou este obligatoriu!")]
+        public required int ShirtNumber { get; set; }
     }
 }

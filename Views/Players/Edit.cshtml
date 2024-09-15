@@ -37,14 +37,14 @@
                 &nbsp;
                 <div class="form-group">
                     <label asp-for="Position" class="control-label"></label>
-                    <input asp-for="Position" class="form-control w-100" style="padding: 10px; font-size: 1.1em;" />
+                    <select asp-for="Position" class="form-control w-100" asp-items="@(new MultiSelectList(ViewBag.Positions, "Value", "Text"))" multiple="multiple"></select>
                     <span asp-validation-for="Position" class="text-danger"></span>
                 </div>
                 &nbsp;
                 <div class="form-group">
-                    <label asp-for="Biography" class="control-label"></label>
-                    <textarea asp-for="Biography" class="form-control w-100" style="padding: 10px; font-size: 1.1em;"></textarea>
-                    <span asp-validation-for="Biography" class="text-danger"></span>
+                    <label asp-for="ShirtNumber" class="control-label"></label>
+                    <input asp-for="ShirtNumber" class="form-control w-100" style="padding: 10px; font-size: 1.1em;" />
+                    <span asp-validation-for="ShirtNumber" class="text-danger"></span>
                 </div>
                 &nbsp;
                 <div class="form-group">

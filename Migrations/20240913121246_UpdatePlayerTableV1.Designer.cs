@@ -12,8 +12,8 @@ using vladi.revolution.Data;
 namespace vladi.revolution.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240909171310_UpdatedIdentity")]
-    partial class UpdatedIdentity
+    [Migration("20240913121246_UpdatePlayerTableV1")]
+    partial class UpdatePlayerTableV1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -235,10 +235,6 @@ namespace vladi.revolution.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Biography")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date");
 
@@ -254,6 +250,9 @@ namespace vladi.revolution.Migrations
                     b.Property<string>("ProfilePictureUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ShirtNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
