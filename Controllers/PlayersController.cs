@@ -5,7 +5,7 @@ using vladi.revolution.Data.Services.Interfaces;
 using vladi.revolution.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using Microsoft.SqlServer.Server;
+using Microsoft.Data.SqlClient;
 
 namespace vladi.revolution.Controllers
 {
@@ -23,9 +23,12 @@ namespace vladi.revolution.Controllers
 
         [HttpGet]
         [Route("players")]
-        public async Task<IActionResult> Index(string format = "html")
+        public async Task<IActionResult> Index(string sortOrder = "asc", string format = "html")
         {
             var players = await _service.GetAllAsync();
+            players = sortOrder.ToLower() == "desc"
+                ? players.OrderByDescending(p => p.FullName).ToList()
+                : players.OrderBy(p => p.FullName).ToList();
             return format == "json" ? Json(players) : View(players);
         }
 
@@ -63,7 +66,7 @@ namespace vladi.revolution.Controllers
 
         [HttpPost]
         [Route("players/create")]
-        public async Task<IActionResult> Create([Bind("ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber")] Player player, string[] Position, string format = "html")
+        public async Task<IActionResult> Create([Bind("ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber,FacebookAccount,InstagramAccount")] Player player, string[] Position, string format = "html")
         {
             if (!ModelState.IsValid) return format == "json" ? BadRequest(ModelState) : ViewWithPositions(player);
             player.Position = ParsePositions(Position);
@@ -101,7 +104,7 @@ namespace vladi.revolution.Controllers
 
         [HttpPost]
         [Route("players/edit/{id}")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber")] Player player, string[] Position, string format = "html")
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber,FacebookAccount,InstagramAccount")] Player player, string[] Position, string format = "html")
         {
             if (!ModelState.IsValid) return format == "json" ? BadRequest(ModelState) : ViewWithPositions(player);
             var existingPlayer = await _service.GetByIdAsync(id);
@@ -175,6 +178,8 @@ namespace vladi.revolution.Controllers
             existingPlayer.BirthDate = newPlayer.BirthDate;
             existingPlayer.Position = newPlayer.Position;
             existingPlayer.ShirtNumber = newPlayer.ShirtNumber;
+            existingPlayer.FacebookAccount = newPlayer.FacebookAccount;
+            existingPlayer.InstagramAccount = newPlayer.InstagramAccount;
         }
 
         // Method to normalize Romanian diacritics in a string

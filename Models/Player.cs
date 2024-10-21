@@ -21,7 +21,7 @@ namespace vladi.revolution.Models
 
         [Display(Name = "Data Nașterii")]
         [Required(ErrorMessage = "Data nașterii este obligatorie!")]
-        public DateOnly BirthDate { get; set; }
+        public required DateOnly BirthDate { get; set; }
 
         [Display(Name = "Vârsta")]
         public int Age
@@ -37,10 +37,18 @@ namespace vladi.revolution.Models
 
         [Display(Name = "Poziție")]
         [Required(ErrorMessage = "Poziția jucătorului este obligatorie!")]
-        public List<Positions> Position { get; set; } = new List<Positions>();
+        public required List<Positions> Position { get; set; } = new List<Positions>();
 
         [Display(Name = "Număr tricou")]
         [Required(ErrorMessage = "Numărul de pe tricou este obligatoriu!")]
         public required int ShirtNumber { get; set; }
+
+        [Display(Name = "Facebook (Opțional)")]
+        public string? FacebookAccount { get; set; }
+        
+        [Display(Name = "Instagram (Opțional)")]
+        public string? InstagramAccount { get; set; }
+
+        // Relationships
     }
 }

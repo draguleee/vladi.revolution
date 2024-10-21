@@ -23,6 +23,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 
 builder.Services.AddScoped<IPlayersService, PlayersService>();
+builder.Services.AddScoped<IStaffService, StaffService>();
+builder.Services.AddScoped<ITransfersService, TransfersService>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddMemoryCache();

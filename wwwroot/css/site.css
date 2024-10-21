@@ -86,6 +86,27 @@ h1, h2, h3, h4, h5, h6, p, a, span, div, td, th {
     color: var(--text-color);
 }
 
+/* Dark mode for cards */
+.dark-mode .card {
+    background-color: #1e1e1e !important; /* Dark background for the card */
+    border-color: #333333; /* Dark border */
+}
+
+.dark-mode .card-header,
+.dark-mode .card-footer {
+    background-color: #2c2c2c; /* Slightly lighter dark background for headers and footers */
+    border-color: #444444; /* Darker border for header and footer */
+}
+
+.dark-mode .card-body {
+    background-color: #1e1e1e !important; /* Match the card background */
+}
+
+/* Maintain text color in dark mode (already handled by global styles) */
+h5, p {
+    color: var(--text-color) !important;
+}
+
 #modeIcon {
     margin-right: 10px;
     font-size: 1.5rem;
@@ -179,3 +200,41 @@ input:checked + .slider {
     background-color: #ff4444;
     border-color: #ff5555;
 }
+
+.position-relative {
+    position: relative;
+    display: inline-block;
+}
+
+.badge-number {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: white; /* White circle */
+    border-radius: 50%; /* Make it a circle */
+    width: 40px; /* Smaller circle */
+    height: 40px; /* Smaller circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+}
+
+.t-shirt-icon {
+    font-size: 1.9rem; /* Adjust t-shirt size to fit in the circle */
+    color: blue; /* Blue t-shirt color */
+    position: absolute;
+    z-index: 1; /* T-shirt icon behind the number */
+}
+
+.shirt-number {
+    font-size: 1rem; /* Adjust the size of the number */
+    font-weight: bold;
+    color: white; /* White number to contrast the blue t-shirt */
+    z-index: 2; /* Ensure the number is on top */
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+

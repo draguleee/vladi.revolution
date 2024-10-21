@@ -11,12 +11,15 @@ namespace vladi.revolution.Data.Enums
         CB,
 
         [Display(Name = "Mijlocaș")]
-        MC,
+        CM,
 
         [Display(Name = "Atacant")]
         ST,
 
         [Display(Name = "Antrenor Secund")]
-        AS
+        AS,
+
+        [Display(Name = "Antrenor")]
+        A
     }
 }

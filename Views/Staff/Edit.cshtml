@@ -1,9 +1,9 @@
 ﻿@*Define Model*@
-@model Player
+@model Staff
 
 @*Define ViewData*@
 @{
-    ViewData["Title"] = "Editează Jucător - Vladi Revolution";
+    ViewData["Title"] = "Editează Membru Staff - Vladi Revolution";
 }
 
 @*Write Code*@
@@ -30,38 +30,14 @@
                 </div>
                 &nbsp;
                 <div class="form-group">
-                    <label asp-for="BirthDate" class="control-label"></label>
-                    <input asp-for="BirthDate" type="date" class="form-control w-100" style="padding: 10px; font-size: 1.1em;" />
-                    <span asp-validation-for="BirthDate" class="text-danger"></span>
-                </div>
-                &nbsp;
-                <div class="form-group">
-                    <label asp-for="Position" class="control-label"></label>
-                    <select asp-for="Position" class="form-control w-100" asp-items="@(new MultiSelectList(ViewBag.Positions, "Value", "Text"))" multiple="multiple"></select>
-                    <span asp-validation-for="Position" class="text-danger"></span>
-                </div>
-                &nbsp;
-                <div class="form-group">
-                    <label asp-for="ShirtNumber" class="control-label"></label>
-                    <input asp-for="ShirtNumber" class="form-control w-100" style="padding: 10px; font-size: 1.1em;" />
-                    <span asp-validation-for="ShirtNumber" class="text-danger"></span>
-                </div>
-                &nbsp;
-                <div class="form-group">
-                    <label asp-for="FacebookAccount" class="control-label"></label>
-                    <input asp-for="FacebookAccount" class="form-control w-100" />
-                    <span asp-validation-for="FacebookAccount" class="text-danger"></span>
-                </div>
-                &nbsp;
-                <div class="form-group">
-                    <label asp-for="InstagramAccount" class="control-label"></label>
-                    <input asp-for="InstagramAccount" class="form-control w-100" />
-                    <span asp-validation-for="InstagramAccount" class="text-danger"></span>
+                    <label asp-for="Function" class="control-label"></label>
+                    <input asp-for="Function" class="form-control w-100" />
+                    <span asp-validation-for="Function" class="text-danger"></span>
                 </div>
                 &nbsp;
                 <div class="form-group">
                     <input type="submit" value="Actualizează" class="btn btn-outline-success float-right" />
-                    <a class="btn btn-outline-secondary" asp-action="Index">Înapoi la Jucători</a>
+                    <a class="btn btn-outline-secondary" asp-action="Index">Înapoi la Staff</a>
                 </div>
             </form>
         </div>
