@@ -1,14 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using vladi.revolution.Data.Enums;
+﻿using System;
 using System.Collections.Generic;
-using System;
-using vladi.revolution.Data.Base;
+using System.ComponentModel.DataAnnotations;
+using vladi.revolution.Models;
+using vladi.revolution.Data.Enums;
 
-namespace vladi.revolution.Models
+namespace vladi.revolution.Data.ViewModels
 {
-    public class Player : IEntityBase
+    public class NewPlayerVM
     {
-        [Key]
         public int Id { get; set; }
 
         [Display(Name = "Poză Profil")]
@@ -40,7 +39,7 @@ namespace vladi.revolution.Models
 
         [Display(Name = "Poziție")]
         [Required(ErrorMessage = "Poziția jucătorului este obligatorie!")]
-        public List<Positions> Position { get; set; } = new List<Positions>();
+        public List<Positions> Position { get; set; }
 
         [Display(Name = "Număr tricou")]
         [Required(ErrorMessage = "Numărul de pe tricou este obligatoriu!")]
@@ -48,11 +47,10 @@ namespace vladi.revolution.Models
 
         [Display(Name = "Facebook (Opțional)")]
         public string? FacebookAccount { get; set; }
-        
+
         [Display(Name = "Instagram (Opțional)")]
         public string? InstagramAccount { get; set; }
 
-        // Relationships
-        public List<Transfer> Transfers { get; set; }
+        public List<Transfer>? Transfers { get; set; }
     }
 }

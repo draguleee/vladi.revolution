@@ -1,12 +1,12 @@
-﻿@model IEnumerable<Transfers>
+﻿@model IEnumerable<Transfer>
 
 @{
-    ViewData["Title"] = "Lista transferurilor - Vladi Revolution";
+    ViewData["Title"] = "Transferuri - Vladi Revolution";
 }
 
 <div class="d-flex justify-content-center text-center">
     <div class="row">
-        &nbsp; <h1 class="text-center">Lista transferurilor</h1> &nbsp;
+        &nbsp; <h1 class="text-center">Transferuri</h1> &nbsp;
         <div class="d-flex justify-content-center">
             <form method="get" class="form-inline my-2 my-lg-0 d-flex" asp-controller="Transfers" asp-action="Filter">
                 <input name="searchString" type="text" class="form-control" placeholder="Caută transfer după jucător..."
@@ -19,7 +19,7 @@
             {
                 <div style="position: fixed; right: 25px; bottom: 25px;" class="text-white">
                     <a asp-controller="Transfers" asp-action="Create" class="btn btn-success btn-lg" style="margin-bottom: 50px;">
-                        <i class="bi bi-plus-circle"></i> Adaugă Transfer
+                        <i class="bi bi-plus-circle"></i> Adaugă transfer
                     </a>
                 </div>
             }
@@ -28,8 +28,8 @@
         <table class="table table-responsive">
             <thead>
                 <tr class="align-middle">
-                    <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.Id)</th>
-                    <th>@Html.DisplayNameFor(model => model.First().FullName)</th> 
+                    <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.First().TransferNumber)</th>
+                    <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.First().Player.FullName)</th>
                     <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.First().TransferDate)</th>
                     <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.First().TransferFrom)</th>
                     <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.First().TransferTo)</th>
@@ -40,19 +40,16 @@
                 @foreach (var item in Model)
                 {
                     <tr class="align-middle">
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.Id" style="text-decoration: none;">
-                                @Html.DisplayFor(model => item.FullName)
-                            </a>
-                        </td>
-                        <td class="d-none d-md-table-cell">@Html.DisplayFor(model => item.TransferDate)</td>
-
+                        <td>@Html.DisplayFor(model => item.TransferNumber)</td>
+                        <td>@Html.DisplayFor(model => item.Player.FullName)</td>
+                        <td>@Html.DisplayFor(model => item.TransferDate)</td>
+                        <td>@Html.DisplayFor(model => item.TransferFrom)</td>
+                        <td>@Html.DisplayFor(model => item.TransferTo)</td>
                         <td class="d-none d-md-table-cell">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary"><i class="bi bi-eye"></i> Detalii</a>
                             @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                             {
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> Editează</a>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-player-id="@item.Id" data-player-name="@item.FullName">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-transfer-id="@item.Id" data-player-name="@item.Player.FullName">
                                     <i class="bi bi-trash"></i> Șterge
                                 </button>
                             }
@@ -68,11 +65,11 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Șterge jucător</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Șterge Transfer</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Ești sigur că vrei să ștergi jucătorul <strong id="playerName"></strong>?</p>
+                <p>Ești sigur că vrei să ștergi transferul pentru jucătorul <strong id="playerName"></strong>?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anulează</button>
@@ -89,13 +86,12 @@
         var deleteModal = document.getElementById('deleteModal');
         deleteModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
-            var playerId = button.getAttribute('data-player-id');
+            var transferId = button.getAttribute('data-transfer-id'); // Change to transfer
             var playerName = button.getAttribute('data-player-name');
-            var modalTitle = deleteModal.querySelector('.modal-title');
             var playerNameElement = deleteModal.querySelector('#playerName');
             var deleteForm = deleteModal.querySelector('#deleteForm');
             playerNameElement.textContent = playerName;
-            deleteForm.action = '/Players/Delete/' + playerId;
-        });
+            deleteForm.action = '/Transfers/Delete/' + transferId; // Update to Transfers
+                });
     </script>
 }

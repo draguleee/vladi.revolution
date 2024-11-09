@@ -12,7 +12,8 @@ namespace vladi.revolution.Data
 
         public DbSet<Player> Players { get; set; }
         public DbSet<Staff> StaffMembers { get; set; }
-        public DbSet<Transfers> Transfers { get; set; }
+        public DbSet<Transfer> Transfers { get; set; }
+        public DbSet<Accident> Accidents { get; set; }
 
     }
 }

@@ -1,5 +1,5 @@
 ﻿@*Define Model*@
-@model Player
+@model vladi.revolution.Data.ViewModels.NewPlayerVM
 
 @*Define ViewData*@
 @{
@@ -31,7 +31,7 @@
                 &nbsp;
                 <div class="form-group">
                     <label asp-for="BirthDate" class="control-label"></label>
-                    <input asp-for="BirthDate" type="date" class="form-control w-100" style="padding: 10px; font-size: 1.1em;" />
+                    <input asp-for="BirthDate" type="date" class=" form-control w-100" style="padding: 10px; font-size: 1.1em;" value="@Model.BirthDate.ToString("yyyy-MM-dd")" />
                     <span asp-validation-for="BirthDate" class="text-danger"></span>
                 </div>
                 &nbsp;

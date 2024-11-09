@@ -1,13 +1,17 @@
-﻿using vladi.revolution.Models;
+﻿using vladi.revolution.Data.Base;
+using vladi.revolution.Data.ViewModels;
+using vladi.revolution.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace vladi.revolution.Data.Services.Interfaces
 {
-    public interface IPlayersService
+    public interface IPlayersService : IEntityBaseRepository<Player>
     {
-        Task<IEnumerable<Player>> GetAllAsync();
-        Task<Player> GetByIdAsync(int id);
-        Task AddAsync(Player player);
-        Task<Player> UpdateAsync(int id, Player player);
-        Task DeleteAsync(int id);
+        Task<Player> GetPlayerByIdAsync(int id); 
+        Task AddNewPlayerAsync(NewPlayerVM data); 
+        Task UpdatePlayerAsync(int id, NewPlayerVM data); 
+        Task<IEnumerable<Player>> GetAllPlayersWithTransfersAsync(); 
+        Task<NewPlayerVM> GetPlayerForEditAsync(int id); 
     }
 }

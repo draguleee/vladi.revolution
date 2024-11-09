@@ -155,6 +155,34 @@ namespace vladi.revolution.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("vladi.revolution.Models.Accident", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("AccidentFrom")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("AccidentTo")
+                        .HasColumnType("date");
+
+                    b.Property<string>("AccidentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("Accidents");
+                });
+
             modelBuilder.Entity("vladi.revolution.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -287,7 +315,7 @@ namespace vladi.revolution.Migrations
                     b.ToTable("StaffMembers");
                 });
 
-            modelBuilder.Entity("vladi.revolution.Models.Transfers", b =>
+            modelBuilder.Entity("vladi.revolution.Models.Transfer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -295,9 +323,8 @@ namespace vladi.revolution.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
 
                     b.Property<DateOnly>("TransferDate")
                         .HasColumnType("date");
@@ -306,11 +333,16 @@ namespace vladi.revolution.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TransferNumber")
+                        .HasColumnType("int");
+
                     b.Property<string>("TransferTo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PlayerId");
 
                     b.ToTable("Transfers");
                 });
@@ -364,6 +396,33 @@ namespace vladi.revolution.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("vladi.revolution.Models.Accident", b =>
+                {
+                    b.HasOne("vladi.revolution.Models.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("vladi.revolution.Models.Transfer", b =>
+                {
+                    b.HasOne("vladi.revolution.Models.Player", "Player")
+                        .WithMany("Transfers")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("vladi.revolution.Models.Player", b =>
+                {
+                    b.Navigation("Transfers");
                 });
 #pragma warning restore 612, 618
         }

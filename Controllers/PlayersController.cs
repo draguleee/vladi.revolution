@@ -2,22 +2,22 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using vladi.revolution.Data.Enums;
 using vladi.revolution.Data.Services.Interfaces;
-using vladi.revolution.Models;
+using vladi.revolution.Data.ViewModels;
+using System.Linq;
+using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using Microsoft.Data.SqlClient;
 
 namespace vladi.revolution.Controllers
 {
     public class PlayersController : Controller
     {
-        private readonly IPlayersService _service;
+        private readonly IPlayersService _playersService;
 
-        public PlayersController(IPlayersService service)
+        public PlayersController(IPlayersService playersService)
         {
-            _service = service;
+            _playersService = playersService;
         }
-
 
         #region GET ALL PLAYERS
 
@@ -25,7 +25,8 @@ namespace vladi.revolution.Controllers
         [Route("players")]
         public async Task<IActionResult> Index(string sortOrder = "asc", string format = "html")
         {
-            var players = await _service.GetAllAsync();
+            ViewData["CurrentSortOrder"] = sortOrder;
+            var players = await _playersService.GetAllAsync();
             players = sortOrder.ToLower() == "desc"
                 ? players.OrderByDescending(p => p.FullName).ToList()
                 : players.OrderBy(p => p.FullName).ToList();
@@ -34,14 +35,13 @@ namespace vladi.revolution.Controllers
 
         #endregion
 
-
         #region FILTER PLAYERS
 
         [HttpGet]
         [Route("players/filter")]
         public async Task<IActionResult> Filter(string searchString, string format = "html")
         {
-            var allPlayers = await _service.GetAllAsync();
+            var allPlayers = await _playersService.GetAllAsync();
             if (!string.IsNullOrEmpty(searchString))
             {
                 searchString = NormalizeString(searchString);
@@ -53,7 +53,6 @@ namespace vladi.revolution.Controllers
 
         #endregion
 
-
         #region CREATE PLAYER
 
         [HttpGet]
@@ -61,21 +60,30 @@ namespace vladi.revolution.Controllers
         public IActionResult Create(string format = "html")
         {
             var positions = GetPositionsList();
-            return format == "json" ? Json(positions) : ViewWithPositions();
+            ViewBag.Positions = positions;
+            var viewModel = new NewPlayerVM
+            {
+                Position = new List<Positions>()
+            };
+            return format == "json" ? Json(viewModel) : View(viewModel);
         }
 
         [HttpPost]
         [Route("players/create")]
-        public async Task<IActionResult> Create([Bind("ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber,FacebookAccount,InstagramAccount")] Player player, string[] Position, string format = "html")
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(NewPlayerVM viewModel, string format = "html")
         {
-            if (!ModelState.IsValid) return format == "json" ? BadRequest(ModelState) : ViewWithPositions(player);
-            player.Position = ParsePositions(Position);
-            await _service.AddAsync(player);
-            return format == "json" ? Ok(player) : RedirectToAction(nameof(Index));
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Positions = GetPositionsList();
+                return format == "json" ? BadRequest(ModelState) : View(viewModel);
+            }
+
+            await _playersService.AddNewPlayerAsync(viewModel);
+            return format == "json" ? Ok(viewModel) : RedirectToAction(nameof(Index));
         }
 
         #endregion
-
 
         #region PLAYER DETAILS
 
@@ -83,13 +91,14 @@ namespace vladi.revolution.Controllers
         [Route("players/details/{id}")]
         public async Task<IActionResult> Details(int id, string format = "html")
         {
-            var player = await _service.GetByIdAsync(id);
-            if (player == null) return format == "json" ? NotFound(new { message = "Player not found" }) : View("NotFound");
+            var player = await _playersService.GetPlayerByIdAsync(id);
+            if (player == null)
+                return format == "json" ? NotFound(new { message = "Player not found" }) : View("NotFound");
+
             return format == "json" ? Json(player) : View(player);
         }
 
         #endregion
-
 
         #region EDIT PLAYER
 
@@ -97,26 +106,28 @@ namespace vladi.revolution.Controllers
         [Route("players/edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            var player = await _service.GetByIdAsync(id);
+            var player = await _playersService.GetPlayerForEditAsync(id);
             if (player == null) return View("NotFound");
-            return ViewWithPositions(player);
+            ViewBag.Positions = GetPositionsList();
+            return View(player);
         }
 
         [HttpPost]
         [Route("players/edit/{id}")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProfilePictureUrl,FullName,BirthDate,Position,ShirtNumber,FacebookAccount,InstagramAccount")] Player player, string[] Position, string format = "html")
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, NewPlayerVM viewModel, string format = "html")
         {
-            if (!ModelState.IsValid) return format == "json" ? BadRequest(ModelState) : ViewWithPositions(player);
-            var existingPlayer = await _service.GetByIdAsync(id);
-            if (existingPlayer == null) return format == "json" ? NotFound() : View("NotFound");
-            UpdatePlayerDetails(existingPlayer, player);
-            existingPlayer.Position = ParsePositions(Position); 
-            await _service.UpdateAsync(id, existingPlayer);
-            return format == "json" ? Ok(existingPlayer) : RedirectToAction(nameof(Index));
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Positions = GetPositionsList();
+                return format == "json" ? BadRequest(ModelState) : View(viewModel);
+            }
+
+            await _playersService.UpdatePlayerAsync(id, viewModel);
+            return format == "json" ? Ok(viewModel) : RedirectToAction(nameof(Index));
         }
 
         #endregion
-
 
         #region DELETE PLAYER
 
@@ -124,23 +135,24 @@ namespace vladi.revolution.Controllers
         [Route("players/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var player = await _service.GetByIdAsync(id);
+            var player = await _playersService.GetPlayerByIdAsync(id);
             if (player == null) return View("NotFound");
             return View(player);
         }
 
         [HttpPost, ActionName("Delete")]
         [Route("players/delete/{id}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id, string format = "html")
         {
-            var player = await _service.GetByIdAsync(id);
+            var player = await _playersService.GetPlayerByIdAsync(id);
             if (player == null) return format == "json" ? NotFound(new { message = "Player not found" }) : View("NotFound");
-            await _service.DeleteAsync(id);
+
+            await _playersService.DeleteAsync(id);
             return format == "json" ? Ok(new { message = "Player deleted successfully" }) : RedirectToAction(nameof(Index));
         }
 
         #endregion
-
 
         #region HELPER METHODS
 
@@ -157,31 +169,6 @@ namespace vladi.revolution.Controllers
                 .ToList();
         }
 
-        // Method to parse Positions strings to enum
-        private List<Positions> ParsePositions(string[] positions)
-        {
-            return positions.Select(p => Enum.Parse<Positions>(p)).ToList();
-        }
-
-        // Method to render the view with Positions data pre-populated
-        private IActionResult ViewWithPositions(object model = null)
-        {
-            ViewBag.Positions = GetPositionsList();
-            return View(model);
-        }
-
-        // Method to update the existing player's details
-        private void UpdatePlayerDetails(Player existingPlayer, Player newPlayer)
-        {
-            existingPlayer.ProfilePictureUrl = newPlayer.ProfilePictureUrl;
-            existingPlayer.FullName = newPlayer.FullName;
-            existingPlayer.BirthDate = newPlayer.BirthDate;
-            existingPlayer.Position = newPlayer.Position;
-            existingPlayer.ShirtNumber = newPlayer.ShirtNumber;
-            existingPlayer.FacebookAccount = newPlayer.FacebookAccount;
-            existingPlayer.InstagramAccount = newPlayer.InstagramAccount;
-        }
-
         // Method to normalize Romanian diacritics in a string
         private string NormalizeString(string input)
         {
@@ -194,6 +181,5 @@ namespace vladi.revolution.Controllers
         }
 
         #endregion
-
     }
 }

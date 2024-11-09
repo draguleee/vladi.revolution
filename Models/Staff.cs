@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using vladi.revolution.Data.Base;
 
 namespace vladi.revolution.Models
 {
-    public class Staff
+    public class Staff : IEntityBase
     {
         [Key]
         public int Id { get; set; }

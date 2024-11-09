@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using vladi.revolution.Data;
+using vladi.revolution.Data.Services;
 using vladi.revolution.Data.Services.Classes;
 using vladi.revolution.Data.Services.Interfaces;
 using vladi.revolution.Models;
@@ -25,6 +26,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddScoped<IPlayersService, PlayersService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<ITransfersService, TransfersService>();
+builder.Services.AddScoped<IAccidentsService, AccidentsService>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddMemoryCache();
