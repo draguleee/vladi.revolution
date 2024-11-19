@@ -11,7 +11,6 @@
         &nbsp; <h1 class="text-center">Jucători</h1> &nbsp;
         <div class="d-flex justify-content-center">
             <div class="d-flex justify-content-center flex-wrap">
-                <!-- Search Form -->
                 <div class="col-12 col-md-12 mb-2 mb-md-0 d-flex">
                     <form method="get" class="form-inline d-flex w-100" asp-controller="Players" asp-action="Filter">
                         <input name="searchString" type="text" class="form-control" placeholder="Caută jucător..." style="width: 100%; padding: 5px;" />
@@ -20,11 +19,9 @@
                         </button>
                     </form>
                 </div>
-                <!-- Sorting Dropdown -->
                 <div class="col-12 col-md-2 d-flex justify-content-md-start justify-content-center" style="margin:5px;">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle w-100 w-md-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <!-- Icon based on sort order -->
                             @if (currentSortOrder == "asc")
                             {
                                 <i class="bi bi-sort-alpha-down"></i>
@@ -45,30 +42,23 @@
                     </div>
                 </div>
             </div>
-            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-            {
-                <div style="position: fixed; right: 25px; bottom: 25px;" class="text-white">
-                    <a asp-controller="Players" asp-action="Create" class="btn btn-success btn-lg" style="margin-bottom: 50px;">
-                        <i class="bi bi-plus-circle"></i> Adaugă Jucător
-                    </a>
-                </div>
-            }
+            @await Html.PartialAsync("_CreateItem", "Players")
         </div>
         &nbsp;
         <table class="table table-responsive">
             <thead>
                 <tr class="align-middle">
-                    <th>@Html.DisplayNameFor(model => model.First().ProfilePictureUrl)</th>
-                    <th>@Html.DisplayNameFor(model => model.First().FullName)</th>
-                    <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.First().BirthDate)</th>
-                    <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.First().Position)</th>
-                    <th class="d-none d-md-table-cell">Acțiuni</th>
+                    <th class="fs-6">@Html.DisplayNameFor(model => model.First().ProfilePictureUrl)</th>
+                    <th class="fs-6">@Html.DisplayNameFor(model => model.First().FullName)</th>
+                    <th class="fs-6 d-none d-md-table-cell">@Html.DisplayNameFor(model => model.First().BirthDate)</th>
+                    <th class="fs-6 d-none d-md-table-cell">@Html.DisplayNameFor(model => model.First().Position)</th>
+                    <th >Acțiuni</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr class="align-middle">
+                    <tr class="fs-6 align-middle">
                         <td>
                             <div class="position-relative">
                                 <a asp-action="Details" asp-route-id="@item.Id" style="text-decoration: none;">
@@ -89,16 +79,24 @@
                         <td class="d-none d-md-table-cell">
                             @string.Join(", ", item.Position.Select(p => p.ToString()))
                         </td>
-                        <td class="d-none d-md-table-cell">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary"><i class="bi bi-eye"></i> Detalii</a>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary">
+                                <i class="bi bi-eye"></i>
+                                <span class="d-none d-md-inline"> Detalii</span>
+                            </a>
                             @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                             {
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> Editează</a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                    <span class="d-none d-md-inline"> Editează</span>
+                                </a>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-player-id="@item.Id" data-player-name="@item.FullName">
-                                    <i class="bi bi-trash"></i> Șterge
+                                    <i class="bi bi-trash"></i>
+                                    <span class="d-none d-md-inline"> Șterge</span>
                                 </button>
                             }
                         </td>
+
                     </tr>
                 }
             </tbody>

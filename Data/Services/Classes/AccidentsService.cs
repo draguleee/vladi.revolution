@@ -32,9 +32,9 @@ namespace vladi.revolution.Data.Services.Classes
             return accidentDetails;
         }
 
-        public async Task<PlayersDropdown> GetNewAccidentDropdownsValues()
+        public async Task<PlayersDropdownVM> GetNewAccidentDropdownsValues()
         {
-            var response = new PlayersDropdown()
+            var response = new PlayersDropdownVM()
             {
                 Players = await _context.Players.OrderBy(n => n.FullName).ToListAsync()
             };

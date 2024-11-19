@@ -15,14 +15,7 @@
                     <i class="bi bi-search"></i>
                 </button>
             </form>
-            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-            {
-                <div style="position: fixed; right: 25px; bottom: 25px;" class="text-white">
-                    <a asp-controller="Accidents" asp-action="Create" class="btn btn-success btn-lg" style="margin-bottom: 50px;">
-                        <i class="bi bi-plus-circle"></i> Adaugă accidentare
-                    </a>
-                </div>
-            }
+            @await Html.PartialAsync("_CreateItem", "Accidents")
         </div>
         &nbsp;
         <table class="table table-responsive">
@@ -87,7 +80,7 @@
             var playerNameElement = deleteModal.querySelector('#playerName');
             var deleteForm = deleteModal.querySelector('#deleteForm');
             playerNameElement.textContent = playerName;
-            deleteForm.action = '/Transfers/Delete/' + transferId; // Update to Transfers
+            deleteForm.action = '/Accidents/Delete/' + transferId; // Update to Transfers
                 });
     </script>
 }

@@ -12,11 +12,11 @@ namespace vladi.revolution.Controllers
 {
     public class PlayersController : Controller
     {
-        private readonly IPlayersService _playersService;
+        private readonly IPlayersService _service;
 
-        public PlayersController(IPlayersService playersService)
+        public PlayersController(IPlayersService service)
         {
-            _playersService = playersService;
+            _service = service;
         }
 
         #region GET ALL PLAYERS
@@ -26,7 +26,7 @@ namespace vladi.revolution.Controllers
         public async Task<IActionResult> Index(string sortOrder = "asc", string format = "html")
         {
             ViewData["CurrentSortOrder"] = sortOrder;
-            var players = await _playersService.GetAllAsync();
+            var players = await _service.GetAllAsync();
             players = sortOrder.ToLower() == "desc"
                 ? players.OrderByDescending(p => p.FullName).ToList()
                 : players.OrderBy(p => p.FullName).ToList();
@@ -41,7 +41,7 @@ namespace vladi.revolution.Controllers
         [Route("players/filter")]
         public async Task<IActionResult> Filter(string searchString, string format = "html")
         {
-            var allPlayers = await _playersService.GetAllAsync();
+            var allPlayers = await _service.GetAllAsync();
             if (!string.IsNullOrEmpty(searchString))
             {
                 searchString = NormalizeString(searchString);
@@ -79,7 +79,7 @@ namespace vladi.revolution.Controllers
                 return format == "json" ? BadRequest(ModelState) : View(viewModel);
             }
 
-            await _playersService.AddNewPlayerAsync(viewModel);
+            await _service.AddNewPlayerAsync(viewModel);
             return format == "json" ? Ok(viewModel) : RedirectToAction(nameof(Index));
         }
 
@@ -91,7 +91,7 @@ namespace vladi.revolution.Controllers
         [Route("players/details/{id}")]
         public async Task<IActionResult> Details(int id, string format = "html")
         {
-            var player = await _playersService.GetPlayerByIdAsync(id);
+            var player = await _service.GetPlayerByIdAsync(id);
             if (player == null)
                 return format == "json" ? NotFound(new { message = "Player not found" }) : View("NotFound");
 
@@ -106,7 +106,7 @@ namespace vladi.revolution.Controllers
         [Route("players/edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            var player = await _playersService.GetPlayerForEditAsync(id);
+            var player = await _service.GetPlayerForEditAsync(id);
             if (player == null) return View("NotFound");
             ViewBag.Positions = GetPositionsList();
             return View(player);
@@ -123,7 +123,7 @@ namespace vladi.revolution.Controllers
                 return format == "json" ? BadRequest(ModelState) : View(viewModel);
             }
 
-            await _playersService.UpdatePlayerAsync(id, viewModel);
+            await _service.UpdatePlayerAsync(id, viewModel);
             return format == "json" ? Ok(viewModel) : RedirectToAction(nameof(Index));
         }
 
@@ -135,7 +135,7 @@ namespace vladi.revolution.Controllers
         [Route("players/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var player = await _playersService.GetPlayerByIdAsync(id);
+            var player = await _service.GetPlayerByIdAsync(id);
             if (player == null) return View("NotFound");
             return View(player);
         }
@@ -145,10 +145,10 @@ namespace vladi.revolution.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id, string format = "html")
         {
-            var player = await _playersService.GetPlayerByIdAsync(id);
+            var player = await _service.GetPlayerByIdAsync(id);
             if (player == null) return format == "json" ? NotFound(new { message = "Player not found" }) : View("NotFound");
 
-            await _playersService.DeleteAsync(id);
+            await _service.DeleteAsync(id);
             return format == "json" ? Ok(new { message = "Player deleted successfully" }) : RedirectToAction(nameof(Index));
         }
 

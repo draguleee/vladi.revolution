@@ -1,0 +1,80 @@
+﻿@* Define the model *@
+@model vladi.revolution.Data.ViewModels.NewMatchVM
+
+@* Define ViewData *@
+@{
+    ViewData["Title"] = "Adaugă Meci - Vladi Revolution";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 col-sm-12 mx-auto bordered-container">
+            <h1 class="text-center mb-4">Adaugă un Meci</h1>
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-lg-6 col-md-12">
+                        <div class="form-group mb-3">
+                            <label asp-for="MatchDate" class="form-label">Data Meciului</label>
+                            <input asp-for="MatchDate" type="date" class="form-control" />
+                            <span asp-validation-for="MatchDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="HomeTeam" class="form-label">Echipa Gazdă</label>
+                            <input asp-for="HomeTeam" class="form-control" />
+                            <span asp-validation-for="HomeTeam" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="AwayTeam" class="form-label">Echipa Oaspete</label>
+                            <input asp-for="AwayTeam" class="form-control" />
+                            <span asp-validation-for="AwayTeam" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="HomeTeamScore" class="form-label">Scor Echipa Gazdă</label>
+                            <input asp-for="HomeTeamScore" class="form-control" />
+                            <span asp-validation-for="HomeTeamScore" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="AwayTeamScore" class="form-label">Scor Echipa Oaspete</label>
+                            <input asp-for="AwayTeamScore" class="form-control" />
+                            <span asp-validation-for="AwayTeamScore" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-lg-6 col-md-12">
+                        <div class="form-group mb-3">
+                            <label asp-for="PlayerIds" class="form-label">Selectează Jucători</label>
+                            @foreach (var player in (SelectList)ViewBag.Players)
+                            {
+                                <div class="form-check">
+                                    <input type="checkbox" name="PlayerIds" value="@player.Value" class="form-check-input" id="player_@player.Value" />
+                                    <label class="form-check-label" for="player_@player.Value">@player.Text</label>
+                                </div>
+                            }
+
+                            <span asp-validation-for="PlayerIds" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons Section -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success me-3">Create</button>
+                    <a class="btn btn-secondary" asp-action="Index">Înapoi la Meciuri</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $("#ImageUrl").on("change", function () {
+            var output = document.getElementById("ImageUrlPreview");
+            output.src = $(this).val();
+        })
+    </script>
+}

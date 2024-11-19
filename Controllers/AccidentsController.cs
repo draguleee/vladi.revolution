@@ -78,6 +78,69 @@ namespace vladi.revolution.Controllers
         #endregion
 
 
+        #region EDIT ACCIDENT
+
+        [HttpGet]
+        [Route("accidents/edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var accident = await _service.GetAccidentByIdAsync(id);
+            if (accident == null) return View("NotFound");
+            var accidentDropdownData = await _service.GetNewAccidentDropdownsValues();
+            ViewBag.Players = new SelectList(accidentDropdownData.Players, "Id", "FullName");
+            var accidentVM = new NewAccidentVM
+            {
+                PlayerId = accident.PlayerId,
+                AccidentFrom = accident.AccidentFrom,
+                AccidentTo = accident.AccidentTo,
+                AccidentType = accident.AccidentType
+            };
+            return View(accidentVM);
+        }
+
+        [HttpPost]
+        [Route("accidents/edit/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, NewAccidentVM accidentVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                var accidentDropdownData = await _service.GetNewAccidentDropdownsValues();
+                ViewBag.Players = new SelectList(accidentDropdownData.Players, "Id", "FullName");
+                return View(accidentVM);
+            }
+            await _service.UpdateAccidentAsync(id, accidentVM);
+            return RedirectToAction(nameof(Index));
+        }
+
+        #endregion
+
+
+        #region DELETE PLAYER
+
+        [HttpGet]
+        [Route("accidents/delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var accident = await _service.GetAccidentByIdAsync(id);
+            if (accident == null) return View("NotFound");
+            return View(accident);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [Route("accidents/delete/{id}")]
+        public async Task<IActionResult> DeleteConfirmed(int id, string format = "html")
+        {
+            var accident = await _service.GetAccidentByIdAsync(id);
+            if (accident == null) return format == "json" ? NotFound(new { message = "Transfer not found" }) : View("NotFound");
+            await _service.DeleteAsync(id);
+            return format == "json" ? Ok(new { message = "Transfer deleted successfully" }) : RedirectToAction(nameof(Index));
+        }
+
+        #endregion
+
+
+
         #region HELPER METHODS
 
         // Method to update the existing player's details

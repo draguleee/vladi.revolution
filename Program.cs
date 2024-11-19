@@ -22,8 +22,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireLowercase = true;
 });
 
-
 builder.Services.AddScoped<IPlayersService, PlayersService>();
+builder.Services.AddScoped<IMatchesService, MatchesService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<ITransfersService, TransfersService>();
 builder.Services.AddScoped<IAccidentsService, AccidentsService>();

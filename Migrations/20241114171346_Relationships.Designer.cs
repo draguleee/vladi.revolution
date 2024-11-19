@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using vladi.revolution.Data;
 
@@ -11,9 +12,11 @@ using vladi.revolution.Data;
 namespace vladi.revolution.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241114171346_Relationships")]
+    partial class Relationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,18 +267,15 @@ namespace vladi.revolution.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("AwayTeamScore")
+                    b.Property<int>("AwayTeamScore")
                         .HasColumnType("int");
 
                     b.Property<string>("HomeTeam")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("HomeTeamScore")
+                    b.Property<int>("HomeTeamScore")
                         .HasColumnType("int");
-
-                    b.Property<DateOnly>("MatchDate")
-                        .HasColumnType("date");
 
                     b.HasKey("Id");
 

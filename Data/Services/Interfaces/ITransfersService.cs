@@ -9,7 +9,7 @@ namespace vladi.revolution.Data.Services.Interfaces
     public interface ITransfersService : IEntityBaseRepository<Transfer>
     {
         Task<Transfer> GetTransferByIdAsync(int id);
-        Task<PlayersDropdown> GetNewTransferDropdownsValues();
+        Task<PlayersDropdownVM> GetNewTransferDropdownsValues();
         Task AddNewTransferAsync(NewTransferVM data);
         Task UpdateTransferAsync(int id, NewTransferVM data);
         Task<IEnumerable<Transfer>> GetAllTransfersWithPlayersAsync();

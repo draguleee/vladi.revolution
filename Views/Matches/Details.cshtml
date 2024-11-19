@@ -1,0 +1,52 @@
+﻿@* Define Model *@
+@model vladi.revolution.Models.Match
+
+@* Define ViewData *@
+@{
+    ViewData["Title"] = "Detalii Meci - Vladi Revolution";
+}
+
+@* Adjusted and Centered Layout *@
+<div class="d-flex justify-content-center">
+    <div class="col-lg-9 col-md-10 col-sm-12 text-center">
+
+        <!-- Team Names Row -->
+        <div class="row justify-content-center align-items-center mb-3">
+            <div class="col-12">
+                <h1 class="text-truncate">
+                    @Model.HomeTeam <span class="mx-2">-</span> @Model.AwayTeam
+                </h1>
+            </div>
+        </div>
+
+        <!-- Scores Row -->
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12">
+                <h1 class="score">
+                    @Model.HomeTeamScore <span class="mx-2">-</span> @Model.AwayTeamScore
+                </h1>
+            </div>
+        </div>
+
+        <!-- Match Information Section -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-6 mb-3">
+                <h3>Titulari</h3>
+                <ul class="list-unstyled mt-2">
+                    @foreach (var playerMatch in Model.PlayersMatches)
+                    {
+                        <li>@playerMatch.Player.FullName</li>
+                    }
+                </ul>
+            </div>
+            <div class="col-6 mb-3">
+                <h3>Statistici</h3>
+                <ul class="list-unstyled mt-2">
+                    <li><strong>Goluri & Asisturi:</strong> Value 2</li>
+                    <li><strong>Cartonașe Galbene:</strong> Value 3</li>
+                    <li><strong>Cartonașe Roșii:</strong> Value 4</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

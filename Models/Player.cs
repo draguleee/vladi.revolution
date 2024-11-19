@@ -53,6 +53,8 @@ namespace vladi.revolution.Models
         public string? InstagramAccount { get; set; }
 
         // Relationships
+        public List<PlayerMatch> PlayersMatches { get; set; }
         public List<Transfer> Transfers { get; set; }
+        public List<Accident> Accidents { get; set; }
     }
 }

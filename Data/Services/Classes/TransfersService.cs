@@ -37,9 +37,9 @@ namespace vladi.revolution.Data.Services
             return transferDetails;
         }
 
-        public async Task<PlayersDropdown> GetNewTransferDropdownsValues()
+        public async Task<PlayersDropdownVM> GetNewTransferDropdownsValues()
         {
-            var response = new PlayersDropdown()
+            var response = new PlayersDropdownVM()
             {
                 Players = await _context.Players.OrderBy(n => n.FullName).ToListAsync()
             };

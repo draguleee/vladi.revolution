@@ -2,9 +2,9 @@
 
 namespace vladi.revolution.Data.ViewModels
 {
-    public class PlayersDropdown
+    public class PlayersDropdownVM
     {
-        public PlayersDropdown()
+        public PlayersDropdownVM()
         {
             Players = new List<Player>();
         }

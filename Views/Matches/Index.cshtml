@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Match>
+
+@{
+    ViewData["Title"] = "Meciuri - Vladi Revolution";
+}
+
+<div class="row">
+    <h1 class="text-center" style="margin-bottom: 30px;">Meciuri</h1>
+    @foreach (var item in Model)
+    {
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mb-3">
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-md-12" style="background-color: #212529">
+                        <div class="card-header text-white text-center">
+                            <h5 class="card-title">
+                                <a asp-action="Details" asp-route-id="@item.Id" style="text-decoration: none; color: inherit;">
+                                    @item.MatchDate.ToString("dd MMM yyyy") <br />
+                                    @item.HomeTeam - @item.AwayTeam <br />
+                                    @item.HomeTeamScore - @item.AwayTeamScore
+                                </a>
+                            </h5>
+                            <p>
+                                <b>Status: </b>
+                                @if (DateOnly.FromDateTime(DateTime.Now) == item.MatchDate)
+                                {
+                                    <span class="badge bg-success text-white">ASTĂZI</span>
+                                }
+                                else if (DateOnly.FromDateTime(DateTime.Now) > item.MatchDate)
+                                {
+                                    <span class="badge bg-danger text-white">FINALIZAT</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary text-white">URMEAZĂ</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="card-footer text-center">
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id">
+                                    <i class="bi bi-pencil-square"></i> Editează
+                                </a>
+                                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-transfer-id="@item.Id">
+                                    <i class="bi bi-trash"></i> Șterge
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@await Html.PartialAsync("_CreateItem", "Matches")
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Șterge Meci</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ești sigur că vrei să ștergi meciul?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anulează</button>
+                <form id="deleteForm" method="post">
+                    <button type="submit" class="btn btn-danger">Șterge</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const matchId = button.getAttribute('data-transfer-id');
+            const deleteForm = document.getElementById('deleteForm');
+            deleteForm.setAttribute('action', `/matches/delete/${matchId}`);
+        });
+    });
+</script>
