@@ -56,6 +56,40 @@
 
                             <span asp-validation-for="PlayerIds" class="text-danger"></span>
                         </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">Adaugă Goluri</label>
+                            <div id="goals-container">
+                                <div class="goal-entry border p-3 mb-2">
+                                    <div class="form-group mb-2">
+                                        <label class="form-label">Jucător Marcator</label>
+                                        <select name="Goals[0].ScorerId" class="form-select">
+                                            <option value="">Selectează</option>
+                                            @foreach (var player in (SelectList)ViewBag.Players)
+                                            {
+                                                <option value="@player.Value">@player.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="form-label">Jucător Pasator (Asist)</label>
+                                        <select name="Goals[0].AssisterId" class="form-select">
+                                            <option value="">Selectează</option>
+                                            @foreach (var player in (SelectList)ViewBag.Players)
+                                            {
+                                                <option value="@player.Value">@player.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="form-label">Minutul Golului</label>
+                                        <input type="number" name="Goals[0].Minute" class="form-control" placeholder="Ex: 45" />
+                                    </div>
+                                    <button type="button" class="btn btn-danger remove-goal">Șterge</button>
+                                </div>
+                            </div>
+                            <button type="button" id="add-goal" class="btn btn-primary mt-2">Adaugă Gol</button>
+                        </div>
                     </div>
                 </div>
 
@@ -69,12 +103,50 @@
     </div>
 </div>
 
-
 @section Scripts {
     <script>
-        $("#ImageUrl").on("change", function () {
-            var output = document.getElementById("ImageUrlPreview");
-            output.src = $(this).val();
-        })
+        let goalIndex = 1;
+
+        document.getElementById("add-goal").addEventListener("click", function () {
+            const goalsContainer = document.getElementById("goals-container");
+            const newGoal = document.createElement("div");
+            newGoal.classList.add("goal-entry", "border", "p-3", "mb-2");
+            newGoal.innerHTML = `
+                        <div class="form-group mb-2">
+                            <label class="form-label">Jucător Marcator</label>
+                            <select name="Goals[${goalIndex}].ScorerId" class="form-select">
+                                <option value="">Selectează</option>
+        @foreach (var player in (SelectList)ViewBag.Players)
+        {
+                                        <option value="@player.Value">@player.Text</option>
+        }
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label">Jucător Pasator (Asist)</label>
+                            <select name="Goals[${goalIndex}].AssisterId" class="form-select">
+                                <option value="">Selectează</option>
+        @foreach (var player in (SelectList)ViewBag.Players)
+        {
+                                        <option value="@player.Value">@player.Text</option>
+        }
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label">Minutul Golului</label>
+                            <input type="number" name="Goals[${goalIndex}].Minute" class="form-control" placeholder="Ex: 45" />
+                        </div>
+                        <button type="button" class="btn btn-danger remove-goal">Șterge</button>
+                    `;
+
+            goalsContainer.appendChild(newGoal);
+            goalIndex++;
+        });
+
+        document.getElementById("goals-container").addEventListener("click", function (event) {
+            if (event.target.classList.contains("remove-goal")) {
+                event.target.parentElement.remove();
+            }
+        });
     </script>
 }

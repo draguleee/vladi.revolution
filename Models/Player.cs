@@ -56,5 +56,7 @@ namespace vladi.revolution.Models
         public List<PlayerMatch> PlayersMatches { get; set; }
         public List<Transfer> Transfers { get; set; }
         public List<Accident> Accidents { get; set; }
+        public List<Goal> ScoredGoals { get; set; }
+        public List<Goal> AssistedGoals { get; set; }
     }
 }

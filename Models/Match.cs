@@ -25,5 +25,6 @@ namespace vladi.revolution.Models
 
         // Relationships
         public List<PlayerMatch> PlayersMatches { get; set; }
+        public List<Goal> Goals { get; set; } = new List<Goal>();
     }
 }

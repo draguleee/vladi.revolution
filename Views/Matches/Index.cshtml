@@ -5,7 +5,7 @@
 }
 
 <div class="row">
-    <h1 class="text-center" style="margin-bottom: 30px;">Meciuri</h1>
+    <h1 class="text-center my-4">Meciuri</h1>
     @foreach (var item in Model)
     {
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mb-3">
@@ -43,10 +43,10 @@
                             @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                             {
                                 <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id">
-                                    <i class="bi bi-pencil-square"></i> Editează
+                                    <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-transfer-id="@item.Id">
-                                    <i class="bi bi-trash"></i> Șterge
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             }
                         </div>

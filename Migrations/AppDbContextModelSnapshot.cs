@@ -180,7 +180,7 @@ namespace vladi.revolution.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("Accidents");
+                    b.ToTable("Accidents", (string)null);
                 });
 
             modelBuilder.Entity("vladi.revolution.Models.AppUser", b =>
@@ -279,7 +279,7 @@ namespace vladi.revolution.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Matches");
+                    b.ToTable("Matches", (string)null);
                 });
 
             modelBuilder.Entity("vladi.revolution.Models.Player", b =>
@@ -317,7 +317,7 @@ namespace vladi.revolution.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Players");
+                    b.ToTable("Players", (string)null);
                 });
 
             modelBuilder.Entity("vladi.revolution.Models.PlayerMatch", b =>
@@ -332,7 +332,7 @@ namespace vladi.revolution.Migrations
 
                     b.HasIndex("MatchId");
 
-                    b.ToTable("PlayersMatches");
+                    b.ToTable("PlayersMatches", (string)null);
                 });
 
             modelBuilder.Entity("vladi.revolution.Models.Staff", b =>
@@ -357,7 +357,7 @@ namespace vladi.revolution.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StaffMembers");
+                    b.ToTable("StaffMembers", (string)null);
                 });
 
             modelBuilder.Entity("vladi.revolution.Models.Transfer", b =>
@@ -389,7 +389,7 @@ namespace vladi.revolution.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("Transfers");
+                    b.ToTable("Transfers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

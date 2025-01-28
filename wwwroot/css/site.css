@@ -1,20 +1,20 @@
-/* Root Variables */
+/* Root Variables (Default White Mode Variables)*/
 :root {
-    --text-color: #000;
-    --background-color: #f5f5f5;
-    --navbar-bg-color: #f8f9fa;
-    --footer-bg-color: #f8f9fa;
-    --table-border-color: #f8f9fa;
+    --text-color: #121212;
+    --background-color: #dbdbdb;
+    --navbar-footer-color: #d1d1d1;
+    --table-border-color: #d1d1d1;
 }
+
 
 /* Dark Mode Variables */
 .dark-mode {
-    --text-color: #fff;
-    --background-color: #121212;
-    --navbar-bg-color: #1f1f1f;
-    --footer-bg-color: #1f1f1f;
-    --table-border-color: #1f1f1f;
+    --text-color: #ffffff;
+    --background-color: #000C18;
+    --navbar-footer-color: #000A15;
+    --table-border-color: #000A15;
 }
+
 
 /* General Styles */
 html, body {
@@ -37,30 +37,10 @@ html, body {
     }
 }
 
-thead {
-    background-color: var(--navbar-bg-color);
-    color: var(--text-color);
-}
-
-tr, th {
-    border: 1px solid var(--table-border-color);
-    padding: 8px;
-}
-
-
-input {
-    padding: 10px;
-    font-size: 1.5em;
-}
-
-/* Typography and Global Elements */
-h1, h2, h3, h4, h5, h6, p, a, span, div, td, th {
-    color: var(--text-color) !important;
-}
 
 /* Navbar */
 .navbar {
-    background-color: var(--navbar-bg-color) !important;
+    background-color: var(--navbar-footer-color) !important;
     color: var(--text-color) !important;
     transition: background-color 0.5s, color 0.5s;
     margin: 0 !important;
@@ -69,28 +49,31 @@ h1, h2, h3, h4, h5, h6, p, a, span, div, td, th {
     box-shadow: none !important;
 }
 
-.navbar::before, .navbar::after {
-    content: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
+    .navbar::before, .navbar::after {
+        content: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transition: background-color 0.5s, color 0.5s;
+    }
 
-.navbar a {
-    color: var(--text-color) !important;
-}
+    .navbar a {
+        color: var(--text-color) !important;
+        transition: background-color 0.5s, color 0.5s;
+    }
 
 .bordered-container {
-    background-color: var(--navbar-bg-color) !important;
+    background-color: var(--navbar-footer-color) !important;
     border-radius: 8px;
     padding: 20px;
     transition: background-color 0.5s, color 0.5s;
 }
 
+
 /* Footer */
 footer {
-    background-color: var(--footer-bg-color) !important;
+    background-color: var(--navbar-footer-color) !important;
     color: var(--text-color) !important;
     transition: background-color 0.5s, color 0.5s;
     margin: 0 !important;
@@ -100,60 +83,147 @@ footer {
     box-shadow: none !important;
 }
 
-footer::before, footer::after {
-    content: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    footer::before, footer::after {
+        content: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transition: background-color 0.5s, color 0.5s;
+    }
+
+    footer .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 15px;
+        transition: background-color 0.5s, color 0.5s;
+    }
+
+    footer a {
+        color: var(--text-color);
+        transition: background-color 0.5s, color 0.5s;
+    }
+
+
+/* Input */
+
+/* Input */
+input {
+    background-color: #e3e3e3;
+    border: 2px solid var(--navbar-footer-color);
+    color: #000; 
+    transition: background-color 0.5s, color 0.5s;
 }
 
-footer .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 15px;
+.dark-mode input {
+    background-color: #001224;
+    border-color: var(--navbar-footer-color);
+    color: #fff; 
+    transition: background-color 0.5s, color 0.5s;
 }
 
-footer a {
-    color: var(--text-color);
+input:focus {
+    background-color: #e3e3e3;
+    border: 2px solid var(--navbar-footer-color);
+    color: #000; 
+    transition: background-color 0.5s, color 0.5s;
 }
+
+.dark-mode input:focus {
+    background-color: #001224;
+    border: 2px solid var(--dark-highlight-color);
+    color: #fff; 
+    transition: background-color 0.5s, color 0.5s;
+}
+
+
+
+input:checked + .slider {
+    background-color: #e3e3e3;
+}
+
+    input:checked + .slider:before {
+        transform: translateX(20px);
+    }
+
+.dark-mode input:checked + .slider {
+    background-color: #001224;
+}
+
+    .dark-mode input:checked + .slider:before {
+        transform: translateX(20px);
+    }
+
 
 /* Cards */
 .card {
-    background-color: var(--navbar-bg-color);
-    transition: background-color 0.5s;
+    background-color: var(--navbar-footer-color);
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .dark-mode .card {
-    background-color: #1e1e1e !important;
-    border-color: #333;
+    background-color: var(--navbar-footer-color);
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.card-header, .card-footer {
+    background-color: var(--navbar-footer-color);
+    border-color: #bfbfbf;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .dark-mode .card-header, .dark-mode .card-footer {
-    background-color: #2c2c2c;
-    border-color: #444;
+    background-color: var(--navbar-footer-color);
+    border-color: #001a26;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .dark-mode .card-body {
     background-color: #1e1e1e !important;
+    transition: background-color 0.5s, color 0.5s;
 }
+
 
 /* Profile Picture */
 .profile-picture {
-    border: 3px solid #444;
+    border: 3px solid var(--navbar-footer-color);
     border-radius: 50%;
     padding: 5px;
     max-width: 150px;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .dark-mode .profile-picture {
-    border-color: #fff;
+    border-color: var(--navbar-footer-color);
+    transition: background-color 0.5s, color 0.5s;
 }
+
+
+
+thead {
+    background-color: var(--navbar-footer-color);
+    color: var(--text-color);
+    transition: background-color 0.5s, color 0.5s;
+}
+
+tr, th {
+    border: 1px solid var(--table-border-color);
+    padding: 8px;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+
+/* Typography and Global Elements */
+h1, h2, h3, h4, h5, h6, p, a, span, div, td, th {
+    color: var(--text-color) !important;
+    transition: background-color 0.5s, color 0.5s;
+}
+
 
 /* Modal */
 .modal-content {
-    background-color: var(--navbar-bg-color);
+    background-color: var(--navbar-footer-color);
     color: var(--text-color);
     border: none;
 }
@@ -221,7 +291,7 @@ footer a {
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    transition: 0.4s;
+    transition: 0.5s;
     border-radius: 20px;
 }
 
@@ -233,17 +303,11 @@ footer a {
     left: 3px;
     bottom: 3px;
     background-color: #fff;
-    transition: 0.4s;
+    transition: 0.5s;
     border-radius: 50%;
 }
 
-input:checked + .slider {
-    background-color: #808080;
-}
 
-input:checked + .slider:before {
-    transform: translateX(20px);
-}
 
 /* Badge and Icon */
 .position-relative {
@@ -252,10 +316,13 @@ input:checked + .slider:before {
 }
 
 .badge-number {
+    border: 3px solid var(--navbar-footer-color);
+    border-radius: 50%;
     position: absolute;
     bottom: 5px;
     right: 5px;
-    background-color: #fff;
+    background-color: var(--background-color);
+    transition: background-color 0.5s, color 0.5s;
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -263,6 +330,11 @@ input:checked + .slider:before {
     justify-content: center;
     align-items: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .badge-number {
+    background-color: var(--background-color);
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .t-shirt-icon {
@@ -282,6 +354,7 @@ input:checked + .slider:before {
     align-items: center;
 }
 
+
 /* Custom Fonts and Icons */
 #modeIcon {
     margin-right: 10px;
@@ -291,4 +364,11 @@ input:checked + .slider:before {
 .score {
     font-family: 'Audiowide', sans-serif;
     font-weight: 400;
+}
+
+i {
+    vertical-align: middle;
+    font-size: 1.1em;
+    padding: 0; 
+    margin: 0; 
 }
