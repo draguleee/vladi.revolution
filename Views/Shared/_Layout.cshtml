@@ -1,9 +1,11 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark-mode">
 <head>
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="VLADI REVOLUTION :: Liga Desavoia Arad - Bine ați venit! Aici puteți urmări noutățile legate de clubul de minifotbal - Vladi Revolution" />
+
     <title>@ViewData["Title"]</title>
 
     <!-- Early dark mode application to prevent flickering -->
@@ -46,11 +48,13 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link fs-5" asp-controller="Players" asp-action="Index"> Jucători </a></li>
+                        <li class="nav-item"><a class="nav-link fs-5" asp-controller="Players" asp-action="IndexActive"> Lot </a></li>
                         <li class="nav-item"><a class="nav-link fs-5" asp-controller="Matches" asp-action="Index"> Meciuri </a></li>              
                         <li class="nav-item"><a class="nav-link fs-5" asp-controller="Transfers" asp-action="Index"> Transferuri </a></li>
                         <li class="nav-item"><a class="nav-link fs-5" asp-controller="Accidents" asp-action="Index"> Accidentări </a></li>
                         <li class="nav-item"><a class="nav-link fs-5" asp-controller="Staff" asp-action="Index"> Staff </a></li>
+                        <li class="nav-item"><a class="nav-link fs-5" asp-controller="#" asp-action="Index"> Contact </a></li>
+                        <li class="nav-item"><a class="nav-link fs-5" asp-controller="Players" asp-action="Index"> Jucători All-Time </a></li>
                     </ul>
                     <partial name="_Identity" />
                 </div>

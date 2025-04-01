@@ -1,9 +1,9 @@
 /* Root Variables (Default White Mode Variables)*/
 :root {
-    --text-color: #121212;
-    --background-color: #dbdbdb;
-    --navbar-footer-color: #d1d1d1;
-    --table-border-color: #d1d1d1;
+    --text-color: #003b75;
+    --background-color: #b0d7ff;
+    --navbar-footer-color: #a3d1ff;
+    --table-border-color: #a3d1ff;
 }
 
 

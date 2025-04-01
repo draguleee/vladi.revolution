@@ -52,6 +52,7 @@ namespace vladi.revolution.Models
         [Display(Name = "Instagram (Opțional)")]
         public string? InstagramAccount { get; set; }
 
+
         // Relationships
         public List<PlayerMatch> PlayersMatches { get; set; }
         public List<Transfer> Transfers { get; set; }

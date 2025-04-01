@@ -16,6 +16,7 @@ function updateModeIcon(isDarkMode) {
 
 window.onload = function () {
     const darkModeToggle = document.getElementById('darkModeToggle');
+    const modeIcon = document.getElementById('modeIcon');
     const darkMode = localStorage.getItem('darkMode');
     const isDarkMode = (darkMode === 'enabled');
 
@@ -26,6 +27,6 @@ window.onload = function () {
         darkModeToggle.checked = false;
     }
 
-    // Set the correct icon on page load
+    // Call updateModeIcon to sync the icon with the mode
     updateModeIcon(isDarkMode);
 };

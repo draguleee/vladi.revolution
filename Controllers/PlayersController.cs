@@ -35,6 +35,30 @@ namespace vladi.revolution.Controllers
 
         #endregion
 
+        #region GET ALL ACTIVE PLAYERS
+
+        [HttpGet]
+        [Route("activeplayers")]
+        public async Task<IActionResult> IndexActive(string sortOrder = "asc", string format = "html")
+        {
+            ViewData["CurrentSortOrder"] = sortOrder;
+            var players = (await _service.GetAllPlayersWithTransfersAsync()).ToList();
+            players = players
+                .Where(p =>
+                    p.Transfers == null ||
+                    !p.Transfers.Any() ||
+                    p.Transfers.All(t =>
+                        t.TransferTo != null &&
+                        t.TransferTo.Trim().Equals("Vladi Revolution", StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+            players = sortOrder.ToLower() == "desc"
+                ? players.OrderByDescending(p => p.FullName).ToList()
+                : players.OrderBy(p => p.FullName).ToList();
+            return format == "json" ? Json(players) : View(players);
+        }
+
+        #endregion
+
         #region FILTER PLAYERS
 
         [HttpGet]
@@ -52,6 +76,33 @@ namespace vladi.revolution.Controllers
         }
 
         #endregion
+
+        #region FILTER ACTIVE PLAYERS
+
+        [HttpGet]
+        [Route("players/filteractiveplayers")]
+        public async Task<IActionResult> FilterActive(string searchString, string format = "html")
+        {
+            var allPlayers = (await _service.GetAllPlayersWithTransfersAsync()).ToList();
+            var activePlayers = allPlayers
+                .Where(p =>
+                    p.Transfers == null ||
+                    !p.Transfers.Any() ||
+                    p.Transfers.All(t =>
+                        t.TransferTo != null &&
+                        t.TransferTo.Trim().Equals("Vladi Revolution", StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                searchString = NormalizeString(searchString);
+                activePlayers = activePlayers
+                    .Where(p => NormalizeString(p.FullName).Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+            return format == "json" ? Ok(activePlayers) : View("IndexActive", activePlayers);
+        }
+        #endregion
+
 
         #region CREATE PLAYER
 
